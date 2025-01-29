@@ -15,13 +15,16 @@ public class Article {
   private String url;
   private String section;
   private String subsection;
-  private String byline;
+  private Byline byline;
   private String title;
+  private Headline headline;
+
+  private List<Multimedia> multimedia;
+  private String imageUrl; // Set dynamically
 
   @JsonProperty("abstract")
   private String summary;
 
   private List<Media> media;
-  private String imageUrl;
 
 }

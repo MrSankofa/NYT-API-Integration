@@ -1,14 +1,15 @@
 package com.altruisticSoftwareDevelopment.NYT.API.Integration.service;
 
-import com.altruisticSoftwareDevelopment.NYT.API.Integration.model.Article;
-import com.altruisticSoftwareDevelopment.NYT.API.Integration.model.NytResponse;
+import com.altruisticSoftwareDevelopment.NYT.API.Integration.model.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -46,6 +47,29 @@ public class ArticleService {
 
       return article;
     }).toList();
+  }
+
+  public List<Doc> getSearchResults(String searchText) {
+    String url = "https://api.nytimes.com/svc/search/v2/articlesearch.json?q=" + searchText + "&api-key=" + apiKey;
+
+    ResponseEntity<NytSearchResponse> responseEntity =
+        restTemplate.getForEntity(url, NytSearchResponse.class);
+
+    if (responseEntity.getBody() != null && responseEntity.getBody().getResponse() != null) {
+      List<Doc> docs = responseEntity.getBody().getResponse().getDocs();
+
+      // Set image URL for each doc
+      for (Doc doc : docs) {
+        for (Multimedia media : doc.getMultimedia()) {
+          if ("largeHorizontal375".equals(media.getSubtype())) {
+            doc.setImageUrl("https://www.nytimes.com/" + media.getUrl());
+            break;
+          }
+        }
+      }
+      return docs;
+    }
+    return Collections.emptyList();
   }
 
 //  @PostConstruct
