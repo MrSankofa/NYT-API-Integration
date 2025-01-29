@@ -29,11 +29,23 @@ public class ArticleService {
 
     List<Article> articles = new ArrayList<>();
 
+//    articles = updateImageUrl(articles);
     if(response != null && response.getStatus().equals("OK")) {
       return response.getResults();
     } else {
       return articles;
     }
+  }
+
+  public List<Article> updateImageUrl(List<Article> articles) {
+    return articles.stream().map( article -> {
+
+      if(article.getMedia().size() > 0 && article.getMedia().get(0).getMediaMetadata().size() > 0 && article.getMedia().get(0).getMediaMetadata().get(0).getUrl() != null) {
+        article.setImageUrl(article.getMedia().get(0).getMediaMetadata().get(0).getUrl());
+      }
+
+      return article;
+    }).toList();
   }
 
 //  @PostConstruct

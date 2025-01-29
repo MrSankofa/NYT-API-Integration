@@ -19,7 +19,11 @@ public class ArticleController {
   @GetMapping("/")
   public String getArticle(Model model) {
 
-    model.addAttribute("articleList", articleService.getMostPopularArticles());
+    List<Article> articles = articleService.getMostPopularArticles();
+    articles = articleService.updateImageUrl(articles);
+
+
+    model.addAttribute("articleList", articles);
 
     return "index";
   }
