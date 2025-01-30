@@ -40,6 +40,4 @@ public class Doc {
   private String imageUrl; // Image URL for display (set dynamically)
   private String webUrl; // Field for the article's URL
 
-
-  // Getters and setters
 }
